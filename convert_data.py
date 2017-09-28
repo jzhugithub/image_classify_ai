@@ -40,7 +40,7 @@ class ImageReader(object):
         return image
 
 
-def convert_dataset(image_dir, annotation_json_path, output_dir, split_name, _NUM_SHARDS=5):
+def convert_dataset(image_dir, annotation_json_path, output_dir, _NUM_SHARDS=5):
     image_label_list = get_image_label_list(annotation_json_path)
 
     num_per_shard = int(math.ceil(len(image_label_list) / float(_NUM_SHARDS)))
@@ -48,7 +48,7 @@ def convert_dataset(image_dir, annotation_json_path, output_dir, split_name, _NU
         image_reader = ImageReader()
         with tf.Session('') as sess:
             for shard_id in range(_NUM_SHARDS):
-                output_path = os.path.join(output_dir, 'data_%s_%05d-of-%05d.tfrecord' % (split_name, shard_id, _NUM_SHARDS))
+                output_path = os.path.join(output_dir, 'data_%05d-of-%05d.tfrecord' % (shard_id, _NUM_SHARDS))
                 with tf.python_io.TFRecordWriter(output_path) as tfrecord_writer:
                     start_ndx = shard_id * num_per_shard
                     end_ndx = min((shard_id + 1) * num_per_shard, len(image_label_list))
@@ -72,21 +72,20 @@ if __name__ == '__main__':
     annotation_json_path_train = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json'
     image_dir_val = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_validation_20170908/scene_validation_images_20170908'
     annotation_json_path_val = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_validation_20170908/scene_validation_annotations_20170908.json'
-    output_dir = '/home/zj/database_temp/ai_challenger_scene/tfrecord'
+    output_dir = '/home/zj/database_temp/ai_challenger_scene'
     num_shards = 5
 
 
-    os.system('mkdir -p %s' % output_dir)
+    os.system('mkdir -p %s' % os.path.join(output_dir, 'train'))
+    os.system('mkdir -p %s' % os.path.join(output_dir, 'val'))
     convert_dataset(
         image_dir=image_dir_train,
         annotation_json_path=annotation_json_path_train,
-        output_dir=output_dir,
-        split_name='train',
+        output_dir=os.path.join(output_dir, 'train'),
         _NUM_SHARDS=num_shards)
 
     convert_dataset(
         image_dir=image_dir_val,
         annotation_json_path=annotation_json_path_val,
-        output_dir=output_dir,
-        split_name='validation',
+        output_dir=os.path.join(output_dir, 'val'),
         _NUM_SHARDS=num_shards)
