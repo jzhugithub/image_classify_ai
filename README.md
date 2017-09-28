@@ -2,4 +2,10 @@
 
 ## convert_data.py
 
-create tfrecords files for train and valid. 
+Create tfrecords files for train and valid. 
+
+Parameters labeled with `# modify` can be modified in main.
+
+## analyse_data.py
+
+Prepare for date analysis.
