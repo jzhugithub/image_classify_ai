@@ -1,6 +1,8 @@
 import json
 import skimage.io
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def get_label_image_dict(annotation_json_path):
@@ -29,11 +31,26 @@ def show_image(annotation_json_path, image_dir, label):
         skimage.io.imshow(image)
         skimage.io.show()
 
+def count_image_number(annotation_json_path):
+    label_image_dict = get_label_image_dict(annotation_json_path)
+
+    labels = np.zeros(len(label_image_dict))
+    counts = np.zeros(len(label_image_dict))
+    i = 0
+    for label in label_image_dict:
+        labels[i] = label
+        counts[i] = len(label_image_dict[label])
+        i += 1
+
+    plt.bar(labels, counts)
+    plt.show()
+
 
 if __name__ == '__main__':
     annotation_json_path = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json'
     image_dir = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_train_images_20170904'
 
+    count_image_number(annotation_json_path)
     show_image(annotation_json_path, image_dir, label=79)
 
 
