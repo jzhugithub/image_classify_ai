@@ -4,6 +4,7 @@ import math
 import os
 import tensorflow as tf
 import json
+import csv
 
 
 def get_image_label_list(annotation_json_path):
@@ -67,8 +68,16 @@ def convert_dataset(image_dir, annotation_json_path, output_dir, split_name, _NU
     sys.stdout.flush()
 
 
+def label_csv2txt(cvs_path, output_dir):
+    with open(cvs_path, 'rb') as csv_in:
+        with open(os.path.join(output_dir, 'labels.txt'), 'w') as txt_out:
+            for row in csv.reader(csv_in):
+                txt_out.write('%s:%s\n' % (row[0], row[2]))
+
+
 if __name__ == '__main__':
     # modify
+    label_csv_path = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_classes.csv'
     image_dir_train = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_train_images_20170904'
     annotation_json_path_train = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_train_annotations_20170904.json'
     image_dir_val = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_validation_20170908/scene_validation_images_20170908'
@@ -76,14 +85,18 @@ if __name__ == '__main__':
     output_dir = '/home/zj/database_temp/ai_challenger_scene/tfrecord'
     num_shards = 5
 
+
     os.system('mkdir -p %s' % output_dir)
+    # labels
+    label_csv2txt(label_csv_path, output_dir)
+    # train
     convert_dataset(
         image_dir=image_dir_train,
         annotation_json_path=annotation_json_path_train,
         output_dir=output_dir,
         split_name='train',
         _NUM_SHARDS=num_shards)
-
+    # validation
     convert_dataset(
         image_dir=image_dir_val,
         annotation_json_path=annotation_json_path_val,
