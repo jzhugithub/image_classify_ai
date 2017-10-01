@@ -33,6 +33,12 @@ EVAL_DIR=/home/zj/my_workspace/image_classify_ai/model/eval
 # Where the dataset is saved to.
 DATASET_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
 
+# make dictionary to use.
+mkdir -p ${TRAIN_DIR}/stage_1
+mkdir -p ${TRAIN_DIR}/stage_2
+mkdir -p ${EVAL_DIR}/stage_1
+mkdir -p ${EVAL_DIR}/stage_2
+
 # Fine-tune only the new layers for 3000 steps.
 python ../train_classifier.py \
   --train_dir=${TRAIN_DIR}/stage_1 \
@@ -55,7 +61,7 @@ python ../train_classifier.py \
 python ../eval_classifier.py \
   --batch_size=10 \
   --checkpoint_path=${TRAIN_DIR}/stage_1 \
-  --eval_dir=${EVAL_DIR} \
+  --eval_dir=${EVAL_DIR}/stage_1 \
   --dataset_split_name=validation \
   --dataset_dir=${DATASET_DIR} \
   --model_name=resnet_v1_50 \
@@ -80,7 +86,7 @@ python ../train_classifier.py \
 python ../eval_classifier.py \
   --batch_size=10 \
   --checkpoint_path=${TRAIN_DIR}/stage_2 \
-  --eval_dir=${EVAL_DIR} \
+  --eval_dir=${EVAL_DIR}/stage_2 \
   --dataset_split_name=validation \
   --dataset_dir=${DATASET_DIR} \
   --model_name=resnet_v1_50
