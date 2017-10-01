@@ -25,10 +25,10 @@
 PRETRAINED_CHECKPOINT_PATH=/home/zj/database_temp/resnet_v1_50_2016_08_28/resnet_v1_50.ckpt
 
 # Where the training (fine-tuned) checkpoint and logs will be saved to.
-TRAIN_DIR=/home/zj/my_workspace/image_classify_ai/model/train
+TRAIN_DIR=/home/zj/my_workspace/image_classify_ai/models/resnet_v1_50/train
 
 # Where the evaluation logs will be saved to.
-EVAL_DIR=/home/zj/my_workspace/image_classify_ai/model/eval
+EVAL_DIR=/home/zj/my_workspace/image_classify_ai/models/resnet_v1_50/eval
 
 # Where the dataset is saved to.
 DATASET_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
