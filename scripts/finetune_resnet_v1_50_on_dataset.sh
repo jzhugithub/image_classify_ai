@@ -3,7 +3,6 @@
 ################
 # Before train #
 ################
-
 # 1. convert dataset
 # modify parameters in 'convert_data.py'
 # cd to image_classify_ai
@@ -12,26 +11,34 @@
 # 2. set dataset for model
 # modify parameter in 'read_dataset.py'
 
-
 ###############
 # Start train #
 ###############
-
 # modify parameters in '{scripts}/script.sh'
 # cd to image_classify_ai/scripts
 # run: bash {script}.sh
 
-# Where the pre-trained ResNetV1-50 checkpoint is saved to.
-PRETRAINED_CHECKPOINT_PATH=/home/zj/database_temp/resnet_v1_50_2016_08_28/resnet_v1_50.ckpt
+###################
+# Run tensorboard #
+###################
+# tensorboard --logdir=${MODEL_DIR}
+# http://localhost:6006
 
-# Where the training (fine-tuned) checkpoint and logs will be saved to.
-TRAIN_DIR=/home/zj/my_workspace/image_classify_ai/models/resnet_v1_50/train
-
-# Where the evaluation logs will be saved to.
-EVAL_DIR=/home/zj/my_workspace/image_classify_ai/models/resnet_v1_50/eval
 
 # Where the dataset is saved to.
 DATASET_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
+
+# Where the pre-trained inception_resnet_v2 checkpoint is saved to.
+PRETRAINED_CHECKPOINT_PATH=/home/zj/database_temp/resnet_v1_50_2016_08_28/resnet_v1_50.ckpt
+
+# Where the checkpoint and logs will be saved to.
+MODEL_DIR=/home/zj/my_workspace/image_classify_ai/models/resnet_v1_50
+
+# Where the training (fine-tuned) checkpoint and logs will be saved to.
+TRAIN_DIR=${MODEL_DIR}/train
+
+# Where the evaluation logs will be saved to.
+EVAL_DIR=${MODEL_DIR}/eval
 
 # make dictionary to use.
 mkdir -p ${TRAIN_DIR}/stage_1
