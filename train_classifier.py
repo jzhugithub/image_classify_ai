@@ -525,7 +525,7 @@ def main(_):
 
     # Variables to train.
     variables_to_train = _get_variables_to_train()
-    tf.logging.info('variables_to_train: %s' % FLAGS.trainable_scopes)
+    tf.logging.info('variables_to_train: %s' % variables_to_train)
 
     #  and returns a train_tensor and summary_op
     total_loss, clones_gradients = model_deploy.optimize_clones(
