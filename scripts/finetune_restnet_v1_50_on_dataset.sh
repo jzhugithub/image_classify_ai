@@ -35,7 +35,7 @@ DATASET_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
 
 # Fine-tune only the new layers for 3000 steps.
 python ../train_classifier.py \
-  --train_dir=${TRAIN_DIR} \
+  --train_dir=${TRAIN_DIR}/stage_1 \
   --dataset_split_name=train \
   --dataset_dir=${DATASET_DIR} \
   --model_name=resnet_v1_50 \
@@ -54,7 +54,7 @@ python ../train_classifier.py \
 # Run evaluation.
 python ../eval_classifier.py \
   --batch_size=10 \
-  --checkpoint_path=${TRAIN_DIR} \
+  --checkpoint_path=${TRAIN_DIR}/stage_1 \
   --eval_dir=${EVAL_DIR} \
   --dataset_split_name=validation \
   --dataset_dir=${DATASET_DIR} \
@@ -62,10 +62,10 @@ python ../eval_classifier.py \
 
 # Fine-tune all the new layers for 1000 steps.
 python ../train_classifier.py \
-  --train_dir=${TRAIN_DIR} \
+  --train_dir=${TRAIN_DIR}/stage_2 \
   --dataset_split_name=train \
   --dataset_dir=${DATASET_DIR} \
-  --checkpoint_path=${TRAIN_DIR} \
+  --checkpoint_path=${TRAIN_DIR}/stage_1 \
   --model_name=resnet_v1_50 \
   --max_number_of_steps=3000 \
   --batch_size=32 \
@@ -79,7 +79,7 @@ python ../train_classifier.py \
 # Run evaluation.
 python ../eval_classifier.py \
   --batch_size=10 \
-  --checkpoint_path=${TRAIN_DIR} \
+  --checkpoint_path=${TRAIN_DIR}/stage_2 \
   --eval_dir=${EVAL_DIR} \
   --dataset_split_name=validation \
   --dataset_dir=${DATASET_DIR} \
