@@ -76,7 +76,7 @@ python ../train_classifier.py \
   --max_number_of_steps=3000 \
   --batch_size=32 \
   --learning_rate=0.001 \
-  --save_interval_secs=60 \
+  --save_interval_secs=180 \
   --save_summaries_secs=60 \
   --log_every_n_steps=100 \
   --optimizer=rmsprop \
