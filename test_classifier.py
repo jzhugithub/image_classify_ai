@@ -122,9 +122,10 @@ def main(_):
                 result.append({'image_id': image_name, 'label_id': predictions.tolist()})
                 print('image %s is %d,%d,%d' % (image_name, predictions[0], predictions[1], predictions[2]))
 
-            with open('submit.json', 'w') as f:
+            with open(FLAGS.output_path, 'w') as f:
                 json.dump(result, f)
-                print('write result json, num is %d' % len(result))
+                print('write result json to %s\n'
+                      'num is %d' % (FLAGS.output_path, len(result)))
 
 
 if __name__ == '__main__':
