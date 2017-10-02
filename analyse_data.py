@@ -27,7 +27,10 @@ def show_image(annotation_json_path, image_dir, label):
     assert label >= 0 and label <= 79
     label_image_dict = get_label_image_dict(annotation_json_path)
     for image_name in label_image_dict[label]:
-        image = skimage.io.imread(os.path.join(image_dir, image_name))
+        image_path = os.path.join(image_dir, image_name)
+        print('label: %s' % label)
+        print('image_path: %s' % image_path)
+        image = skimage.io.imread(image_path)
         skimage.io.imshow(image)
         skimage.io.show()
 
