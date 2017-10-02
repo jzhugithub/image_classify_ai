@@ -50,7 +50,8 @@ def convert_dataset(image_dir, annotation_json_path, output_dir, split_name, _NU
         image_reader = ImageReader()
         with tf.Session('') as sess:
             for shard_id in range(_NUM_SHARDS):
-                output_path = os.path.join(output_dir, 'data_%s_%05d-of-%05d.tfrecord' % (split_name, shard_id, _NUM_SHARDS))
+                output_path = os.path.join(output_dir,
+                                           'data_%s_%05d-of-%05d.tfrecord' % (split_name, shard_id, _NUM_SHARDS))
                 with tf.python_io.TFRecordWriter(output_path) as tfrecord_writer:
                     start_ndx = shard_id * num_per_shard
                     end_ndx = min((shard_id + 1) * num_per_shard, len(image_label_list))
@@ -84,7 +85,6 @@ if __name__ == '__main__':
     annotation_json_path_val = '/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_validation_20170908/scene_validation_annotations_20170908.json'
     output_dir = '/home/zj/database_temp/ai_challenger_scene/tfrecord'
     num_shards = 5
-
 
     os.system('mkdir -p %s' % output_dir)
     # labels
