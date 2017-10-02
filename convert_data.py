@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 import sys
 from datasets import dataset_utils
 import math
@@ -42,7 +46,7 @@ class ImageReader(object):
 
 
 def convert_dataset(image_dir, annotation_json_path, output_dir, split_name, _NUM_SHARDS=5):
-    print type(annotation_json_path)
+    print(type(annotation_json_path))
     image_label_list = get_image_label_list(annotation_json_path)
 
     num_per_shard = int(math.ceil(len(image_label_list) / float(_NUM_SHARDS)))
