@@ -1,6 +1,8 @@
 # image_classify_ai
 
-Look at files in `scripts/` dictionary to train the model.
+Use tf-slim to classify images.
+
+Look at files in `scripts/` dictionary to train, evaluate and predict.
 
 ## analyse_data.py
 
@@ -26,6 +28,10 @@ Train model.
 
 Evaluate model.
 
+## test_classifier.py
+
+Predict on test dataset.
+
 ## scripts/
 
-Examples of training and evaluating model. 
+Examples of train, evaluation and prediction. 
