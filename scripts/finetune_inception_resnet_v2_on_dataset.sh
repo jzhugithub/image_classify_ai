@@ -26,7 +26,7 @@
 
 
 # Where the train and evaluation dataset is saved to.
-TRAIN_EVAL_DATASET_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
+TRAIN_EVAL_TFRECORD_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
 
 # Where the pre-trained inception_resnet_v2 checkpoint is saved to.
 PRETRAINED_CHECKPOINT_PATH=/home/zj/database_temp/inception_resnet_v2_2016_08_30/inception_resnet_v2_2016_08_30.ckpt
@@ -43,9 +43,14 @@ EVAL_DIR=${MODEL_DIR}/eval
 # Where the test dataset(a dictionary or an image path) is saved to.
 TEST_DATASET_PATH=/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_test_a_20170922/scene_test_a_images_20170922
 
+# Where the train dataset is saved to.
+TRAIN_DATASET_PATH=/home/zj/database_temp/ai_challenger_scene/ai_challenger_scene_train_20170904/scene_train_images_20170904
+
 # Where the test output file will be saved to.
 TEST_DIR=${MODEL_DIR}/test
 TEST_OUTPUT=submit_10_02_test_1.json
+TEST_TRAIN_NUM=7000
+TEST_TRAIN_OUTPUT=submit_10_02_train7000_1.json
 
 # Model's class number.
 NUM_CLASSES=80
@@ -66,7 +71,7 @@ mkdir -p ${TEST_DIR}
 python ../train_classifier.py \
   --train_dir=${TRAIN_DIR}/stage_1 \
   --dataset_split_name=train \
-  --dataset_dir=${TRAIN_EVAL_DATASET_DIR} \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --model_name=inception_resnet_v2 \
   --checkpoint_path=${PRETRAINED_CHECKPOINT_PATH} \
   --checkpoint_exclude_scopes='InceptionResnetV2/AuxLogits, InceptionResnetV2/Logits' \
@@ -86,7 +91,7 @@ python ../eval_classifier.py \
   --checkpoint_path=${TRAIN_DIR}/stage_1 \
   --eval_dir=${EVAL_DIR}/stage_1 \
   --dataset_split_name=validation \
-  --dataset_dir=${TRAIN_EVAL_DATASET_DIR} \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --model_name=inception_resnet_v2 \
 
 
@@ -95,7 +100,7 @@ python ../eval_classifier.py \
 python ../train_classifier.py \
   --train_dir=${TRAIN_DIR}/stage_2 \
   --dataset_split_name=train \
-  --dataset_dir=${TRAIN_EVAL_DATASET_DIR} \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --checkpoint_path=${TRAIN_DIR}/stage_1 \
   --model_name=inception_resnet_v2 \
   --max_number_of_steps=4000 \
@@ -113,7 +118,7 @@ python ../eval_classifier.py \
   --checkpoint_path=${TRAIN_DIR}/stage_2 \
   --eval_dir=${EVAL_DIR}/stage_2 \
   --dataset_split_name=validation \
-  --dataset_dir=${TRAIN_EVAL_DATASET_DIR} \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --model_name=inception_resnet_v2
 
 
@@ -122,7 +127,7 @@ python ../eval_classifier.py \
 python ../train_classifier.py \
   --train_dir=${TRAIN_DIR}/stage_3 \
   --dataset_split_name=train \
-  --dataset_dir=${TRAIN_EVAL_DATASET_DIR} \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --checkpoint_path=${TRAIN_DIR}/stage_2 \
   --model_name=inception_resnet_v2 \
   --max_number_of_steps=4000 \
@@ -140,15 +145,30 @@ python ../eval_classifier.py \
   --checkpoint_path=${TRAIN_DIR}/stage_3 \
   --eval_dir=${EVAL_DIR}/stage_3 \
   --dataset_split_name=validation \
-  --dataset_dir=${TRAIN_EVAL_DATASET_DIR} \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --model_name=inception_resnet_v2
 
 
 #### test ####
-# Run test.
+# Create test_output.
 python ../test_classifier.py \
     --checkpoint_path=${TRAIN_DIR}/stage_3 \
     --output_path=${TEST_DIR}/${TEST_OUTPUT} \
     --test_path=${TEST_DATASET_PATH} \
     --num_classes=${NUM_CLASSES} \
     --model_name=inception_resnet_v2
+
+# Create predict_train7000_output.
+python ../test_classifier.py \
+    --checkpoint_path=${TRAIN_DIR}/stage_3 \
+    --output_path=${TEST_DIR}/${TEST_TRAIN_OUTPUT} \
+    --test_path=${TRAIN_DATASET_PATH} \
+    --test_number=${TEST_TRAIN_NUM} \
+    --num_classes=${NUM_CLASSES} \
+    --model_name=inception_resnet_v2
+
+
+#### Result ####
+# train7000: 0.950
+# val: 0.942
+# test: 0.935
