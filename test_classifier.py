@@ -28,6 +28,10 @@ tf.app.flags.DEFINE_string(
     'test image.')
 
 tf.app.flags.DEFINE_integer(
+    'test_number', None,
+    'The number if images to test')
+
+tf.app.flags.DEFINE_integer(
     'num_classes', 80, 'Number of classes.')
 
 tf.app.flags.DEFINE_integer(
@@ -103,6 +107,8 @@ def main(_):
             if os.path.isdir(FLAGS.test_path):
                 image_dir = FLAGS.test_path
                 image_name_list = os.listdir(image_dir)
+                if FLAGS.test_number is not None:
+                    image_name_list = image_name_list[:FLAGS.test_number]
             else:
                 image_dir = os.path.dirname(FLAGS.test_path)
                 image_name_list = [FLAGS.test_path.split('/')[-1]]
