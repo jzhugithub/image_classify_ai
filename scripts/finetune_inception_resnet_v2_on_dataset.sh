@@ -24,6 +24,13 @@
 # tensorboard --logdir=${MODEL_DIR}
 # http://localhost:6006
 
+##############
+# Result log #
+##############
+# train7000: 0.950
+# val: 0.942
+# test: 0.935
+
 
 # Where the train and evaluation dataset is saved to.
 TRAIN_EVAL_TFRECORD_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
@@ -166,9 +173,3 @@ python ../test_classifier.py \
     --test_number=${TEST_TRAIN_NUM} \
     --num_classes=${NUM_CLASSES} \
     --model_name=inception_resnet_v2
-
-
-#### Result ####
-# train7000: 0.950
-# val: 0.942
-# test: 0.935
