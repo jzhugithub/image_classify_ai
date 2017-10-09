@@ -27,9 +27,10 @@
 ##############
 # Result log #
 ##############
-# train7000:
-# val:
-# test:
+# --stage_2--
+# train7000: 0.946
+# val: 0.940
+# test: ?
 
 
 # Where the train and evaluation dataset is saved to.
@@ -101,14 +102,14 @@ python ../eval_classifier.py \
 
 
 #### stage_2 ####
-# Fine-tune all the new layers for 10000 steps.
+# Fine-tune all the new layers for 6000 steps.
 python ../train_classifier.py \
   --train_dir=${TRAIN_DIR}/stage_2 \
   --dataset_split_name=train \
   --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
   --checkpoint_path=${TRAIN_DIR}/stage_1 \
   --model_name=inception_resnet_v2 \
-  --max_number_of_steps=10000 \
+  --max_number_of_steps=6000 \
   --batch_size=32 \
   --learning_rate=0.00001 \
   --save_interval_secs=1200 \
