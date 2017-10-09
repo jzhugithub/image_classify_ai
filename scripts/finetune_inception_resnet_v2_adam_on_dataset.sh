@@ -32,6 +32,10 @@
 # val: 0.940
 # test: ?
 
+# --stage_3--
+# train7000: 0.954
+# val: 0.944
+# test: 0.942
 
 # Where the train and evaluation dataset is saved to.
 TRAIN_EVAL_TFRECORD_DIR=/home/zj/database_temp/ai_challenger_scene/tfrecord
@@ -56,9 +60,9 @@ TRAIN_DATASET_PATH=/home/zj/database_temp/ai_challenger_scene/ai_challenger_scen
 
 # Where the test output file will be saved to.
 TEST_DIR=${MODEL_DIR}/test
-TEST_OUTPUT=submit_10_08_test_2.json
+TEST_OUTPUT=submit_10_08_test_3.json
 TEST_TRAIN_NUM=7000
-TEST_TRAIN_OUTPUT=submit_10_08_train7000_2.json
+TEST_TRAIN_OUTPUT=submit_10_08_train7000_3.json
 
 # Model's class number.
 NUM_CLASSES=80
@@ -69,6 +73,8 @@ mkdir -p ${TRAIN_DIR}/stage_1
 mkdir -p ${EVAL_DIR}/stage_1
 mkdir -p ${TRAIN_DIR}/stage_2
 mkdir -p ${EVAL_DIR}/stage_2
+mkdir -p ${TRAIN_DIR}/stage_3
+mkdir -p ${EVAL_DIR}/stage_3
 mkdir -p ${TEST_DIR}
 
 
@@ -128,10 +134,37 @@ python ../eval_classifier.py \
   --model_name=inception_resnet_v2
 
 
+#### stage_3 ####
+# Fine-tune all the new layers for 3000 steps.
+python ../train_classifier.py \
+  --train_dir=${TRAIN_DIR}/stage_3 \
+  --dataset_split_name=train \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
+  --checkpoint_path=${TRAIN_DIR}/stage_2 \
+  --model_name=inception_resnet_v2 \
+  --max_number_of_steps=3000 \
+  --batch_size=32 \
+  --learning_rate=0.000005 \
+  --save_interval_secs=600 \
+  --save_summaries_secs=120 \
+  --log_every_n_steps=100 \
+  --optimizer=adam \
+  --opt_epsilon=1e-8
+
+# Run evaluation.
+python ../eval_classifier.py \
+  --batch_size=10 \
+  --checkpoint_path=${TRAIN_DIR}/stage_3 \
+  --eval_dir=${EVAL_DIR}/stage_3 \
+  --dataset_split_name=validation \
+  --dataset_dir=${TRAIN_EVAL_TFRECORD_DIR} \
+  --model_name=inception_resnet_v2
+
+
 #### test ####
 # Create test_output.
 python ../test_classifier.py \
-    --checkpoint_path=${TRAIN_DIR}/stage_2 \
+    --checkpoint_path=${TRAIN_DIR}/stage_3 \
     --output_path=${TEST_DIR}/${TEST_OUTPUT} \
     --test_path=${TEST_DATASET_PATH} \
     --num_classes=${NUM_CLASSES} \
@@ -139,7 +172,7 @@ python ../test_classifier.py \
 
 # Create predict_train7000_output.
 python ../test_classifier.py \
-    --checkpoint_path=${TRAIN_DIR}/stage_2 \
+    --checkpoint_path=${TRAIN_DIR}/stage_3 \
     --output_path=${TEST_DIR}/${TEST_TRAIN_OUTPUT} \
     --test_path=${TRAIN_DATASET_PATH} \
     --test_number=${TEST_TRAIN_NUM} \
